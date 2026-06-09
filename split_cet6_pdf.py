@@ -13,10 +13,13 @@ OUT = Path("切分结果")
 TOPIC_DIRS = {
     "listening": "听力",
     "cloze": "选词填空",
-    "matching": "长篇阅读（段落匹配）",
+    "matching": "长篇阅读",
     "careful": "仔细阅读",
     "writing_translation": "翻译作文",
 }
+
+FILE_TOPIC_NAMES = dict(TOPIC_DIRS)
+FILE_TOPIC_NAMES["matching"] = TOPIC_DIRS["matching"] + "\uff08\u6bb5\u843d\u5339\u914d\uff09"
 
 
 EXAMS = [
@@ -46,7 +49,7 @@ def rect(page: fitz.Page, x0: float, y0: float, x1: float, y1: float) -> fitz.Re
     return fitz.Rect(max(0, x0), max(0, y0), min(w, x1), min(h, y1))
 
 
-def clip_rel(page: fitz.Page, y0: float, y1: float, x0: float = 0.07, x1: float = 0.93) -> fitz.Rect:
+def clip_rel(page: fitz.Page, y0: float, y1: float, x0: float = 0.03, x1: float = 0.98) -> fitz.Rect:
     w, h = page.rect.width, page.rect.height
     return fitz.Rect(w * x0, h * y0, w * x1, h * y1)
 
@@ -91,7 +94,7 @@ def text_full_clips(doc: fitz.Document, start: int, end: int, full8: bool = Fals
     cloze_body = after_last_y(p3, "more than once.", part3 + 80)
     matching_body = after_last_y(p4, "Answer Sheet 2.", sec_b + 80)
 
-    content_x0, content_x1 = 45, p1.rect.width - 35
+    content_x0, content_x1 = 25, p1.rect.width - 12
     top, bottom = 50, p1.rect.height - 45
 
     clips: dict[str, list[tuple[int, fitz.Rect]]] = {
@@ -142,7 +145,7 @@ def text_no_listening6_clips(doc: fitz.Document, start: int, end: int) -> dict[s
     part4 = first_y(plast, "Part IV", plast.rect.height * 0.70) - 8
     cloze_body = after_last_y(p1, "more than once.", part3 + 80)
     matching_body = after_last_y(p2, "Answer Sheet 2.", sec_b + 80)
-    x0, x1 = 45, p1.rect.width - 35
+    x0, x1 = 25, p1.rect.width - 12
     top, bottom = 50, p1.rect.height - 45
     clips = {
         "writing_translation": [(start, rect(p1, x0, 70, x1, part3))],
@@ -237,7 +240,7 @@ def build() -> None:
             for pno, clip in topic_clips:
                 add_clip(out_doc, doc, pno, clip)
             if out_doc.page_count:
-                filename = f"{exam_name}_{TOPIC_DIRS[topic]}.pdf"
+                filename = f"{exam_name}_{FILE_TOPIC_NAMES[topic]}.pdf"
                 out_path = OUT / TOPIC_DIRS[topic] / filename
                 if out_path.exists():
                     out_path.unlink()

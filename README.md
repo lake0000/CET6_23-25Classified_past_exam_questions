@@ -17,7 +17,7 @@
 |---|---:|---|
 | `听力` | 11 | 各套实际给出的听力题目。部分第三套听力与前套一致，原 PDF 未重复给出，因此不生成空文件。 |
 | `选词填空` | 16 | Reading Comprehension Section A，包含短文、26-35 空和词库。 |
-| `长篇阅读（段落匹配）` | 16 | Reading Comprehension Section B，包含段落文章和 36-45 匹配题。 |
+| `长篇阅读` | 16 | Reading Comprehension Section B（段落匹配），包含段落文章和 36-45 匹配题。 |
 | `仔细阅读` | 16 | Reading Comprehension Section C，包含 Passage One、Passage Two 及 46-55 题。 |
 | `翻译作文` | 18 | 合并每套试卷的 Writing 和 Translation 两部分。 |
 
