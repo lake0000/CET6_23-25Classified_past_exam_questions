@@ -89,13 +89,13 @@ def text_full_clips(doc: fitz.Document, start: int, end: int, full8: bool = Fals
     part3 = first_y(p3, "Part III", p3.rect.height * 0.38) - 8
     sec_b = first_y(p4, "Section B", p4.rect.height * 0.27) - 8
     sec_c = first_y(p6, "Section C", p6.rect.height * 0.56) - 8
-    passage_one = first_y(p6, "Passage One", sec_c + 65) - 6
-    part4 = first_y(plast, "Part IV", plast.rect.height * 0.36) - 8
+    passage_one = first_y(p6, "Passage One")
+    part4 = first_y(plast, "Part IV", plast.rect.height * 0.36) - 14
     cloze_body = after_last_y(p3, "more than once.", part3 + 80)
     matching_body = after_last_y(p4, "Answer Sheet 2.", sec_b + 80)
 
     content_x0, content_x1 = 25, p1.rect.width - 12
-    top, bottom = 50, p1.rect.height - 45
+    top, bottom = 35, p1.rect.height - 25
 
     clips: dict[str, list[tuple[int, fitz.Rect]]] = {
         "writing_translation": [(start, rect(p1, content_x0, 70, content_x1, part2))],
@@ -113,10 +113,10 @@ def text_full_clips(doc: fitz.Document, start: int, end: int, full8: bool = Fals
             (start + 4, rect(pages[4], content_x0, top, content_x1, bottom)),
             (start + 5, rect(p6, content_x0, top, content_x1, sec_c)),
         ],
-        "careful": [
-            (start + 5, rect(p6, content_x0, passage_one, content_x1, bottom)),
-        ],
+        "careful": [],
     }
+    if passage_one is not None:
+        clips["careful"].append((start + 5, rect(p6, content_x0, passage_one - 14, content_x1, bottom)))
     for pno in range(start + 6, last):
         clips["careful"].append((pno, rect(doc.load_page(pno - 1), content_x0, top, content_x1, bottom)))
     clips["careful"].append((last, rect(plast, content_x0, top, content_x1, part4)))
@@ -141,12 +141,12 @@ def text_no_listening6_clips(doc: fitz.Document, start: int, end: int) -> dict[s
     part3 = first_y(p1, "Part III", p1.rect.height * 0.28) - 8
     sec_b = first_y(p2, "Section B", p2.rect.height * 0.10) - 8
     sec_c = first_y(p4, "Section C", p4.rect.height * 0.55) - 8
-    passage_one = first_y(p4, "Passage One", sec_c + 65) - 6
-    part4 = first_y(plast, "Part IV", plast.rect.height * 0.70) - 8
+    passage_one = first_y(p4, "Passage One", sec_c + 65) - 14
+    part4 = first_y(plast, "Part IV", plast.rect.height * 0.70) - 14
     cloze_body = after_last_y(p1, "more than once.", part3 + 80)
     matching_body = after_last_y(p2, "Answer Sheet 2.", sec_b + 80)
     x0, x1 = 25, p1.rect.width - 12
-    top, bottom = 50, p1.rect.height - 45
+    top, bottom = 35, p1.rect.height - 25
     clips = {
         "writing_translation": [(start, rect(p1, x0, 70, x1, part3))],
         "cloze": [
@@ -172,7 +172,7 @@ SCAN_FULL9 = {
     "listening": [(0, 0.43, 0.92), (1, 0.08, 0.92), (2, 0.08, 0.56)],
     "cloze": [(2, 0.70, 0.92), (3, 0.08, 0.47)],
     "matching": [(3, 0.57, 0.92), (4, 0.08, 0.92), (5, 0.08, 0.60)],
-    "careful": [(5, 0.66, 0.92), (6, 0.08, 0.92), (7, 0.08, 0.92), (8, 0.08, 0.33)],
+    "careful": [(5, 0.63, 0.95), (6, 0.04, 0.96), (7, 0.04, 0.96), (8, 0.04, 0.36)],
 }
 
 SCAN_FULL8 = {
@@ -180,21 +180,21 @@ SCAN_FULL8 = {
     "listening": [(0, 0.40, 0.92), (1, 0.08, 0.92), (2, 0.08, 0.40)],
     "cloze": [(2, 0.54, 0.92), (3, 0.08, 0.28)],
     "matching": [(3, 0.38, 0.92), (4, 0.08, 0.92), (5, 0.08, 0.45)],
-    "careful": [(5, 0.53, 0.92), (6, 0.08, 0.92), (7, 0.08, 0.55)],
+    "careful": [(5, 0.50, 0.95), (6, 0.04, 0.96), (7, 0.04, 0.58)],
 }
 
 SCAN_NO_LISTENING6 = {
     "writing_translation": [(0, 0.08, 0.28), (5, 0.62, 0.88)],
     "cloze": [(0, 0.42, 0.92), (1, 0.08, 0.28)],
     "matching": [(1, 0.38, 0.92), (2, 0.08, 0.92), (3, 0.08, 0.40)],
-    "careful": [(3, 0.50, 0.92), (4, 0.08, 0.92), (5, 0.08, 0.62)],
+    "careful": [(3, 0.47, 0.95), (4, 0.04, 0.96), (5, 0.04, 0.65)],
 }
 
 SCAN_NO_LISTENING5 = {
     "writing_translation": [(0, 0.10, 0.32), (4, 0.65, 0.88)],
     "cloze": [(0, 0.50, 0.92)],
     "matching": [(1, 0.18, 0.92), (2, 0.08, 0.45)],
-    "careful": [(2, 0.55, 0.92), (3, 0.08, 0.92), (4, 0.08, 0.65)],
+    "careful": [(2, 0.52, 0.95), (3, 0.04, 0.96), (4, 0.04, 0.68)],
 }
 
 
